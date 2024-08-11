@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bananapp Phone</title>
+
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <!-- Sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+    />
+
+    <link
+      rel="shortcut icon"
+      th:href="@{dist/img/pisang.svg}"
+      type="image/x-icon"
+    />
+
+    <!-- Data Table -->
+
+    <link
+      rel="stylesheet"
+      th:href="@{https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css}"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      th:href="@{plugins/fontawesome-free/css/all.min.css}"
+    />
+    <!-- JQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <!-- js -->
+    <script th:src="@{js/smartphone.js}"></script>
+    <script th:src="@{js/addCSRF.js}"></script>
+    <!-- Ionicons -->
+    <link
+      rel="stylesheet"
+      href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap JavaScript (bundle includes Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link
+      rel="stylesheet"
+      th:href="@{plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}"
+    />
+    <!-- iCheck -->
+    <link
+      rel="stylesheet"
+      th:href="@{plugins/icheck-bootstrap/icheck-bootstrap.min.css}"
+    />
+    <link rel="stylesheet" th:href="@{css/perhitungan.css}" />
+    <!-- JQVMap -->
+    <link rel="stylesheet" th:href="@{plugins/jqvmap/jqvmap.min.css}" />
+    <!-- Theme style -->
+    <link rel="stylesheet" th:href="@{dist/css/adminlte.min.css}" />
+    <!-- overlayScrollbars -->
+    <link
+      rel="stylesheet"
+      th:href="@{plugins/overlayScrollbars/css/OverlayScrollbars.min.css}"
+    />
+    <!-- Daterange picker -->
+    <link
+      rel="stylesheet"
+      th:href="@{plugins/daterangepicker/daterangepicker.css}"
+    />
+    <!-- summernote -->
+    <link
+      rel="stylesheet"
+      th:href="@{plugins/summernote/summernote-bs4.min.css}"
+    />
+  </head>
+  <body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+      <!-- Preloader -->
+      <div
+        class="preloader flex-column justify-content-center align-items-center"
+      >
+        <img
+          class="animation__shake"
+          th:src="@{dist/img/pisang.svg}"
+          alt="BananappLogo"
+          height="60"
+          width="60"
+        />
+      </div>
+      <nav th:replace="components/navbar :: navbar"></nav>
+      <nav th:replace="components/navbar :: side"></nav>
+
+      <!-- Main Sidebar Container -->
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0">Data Smartphone</h1>
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+          </div>
+          <!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+          <!-- Modal Add -->
+          <!-- Button trigger modal -->
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#add"
+            onclick="add()"
+            sec:authorize="hasRole('ADMIN')"
+          >
+            <i class="fa-solid fa-square-plus"></i>
+            Add Smartphone
+          </button>
+
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="add"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                    Add Smartphone
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Kode Alternatif</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="in-kode"
+                      disabled
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                      disable
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Nama</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="in-alter"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Brand</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="in-brand"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Layar</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="in-layar"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Kamera</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="in-kamera"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Battery</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="in-battery"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Memori</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="in-memori"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Harga</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="in-harga"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button type="button" id="save-add" class="btn btn-success">
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Modal Update -->
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="update"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                    Edit Smartphone
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" id="update-id" />
+                  <input type="hidden" id="kode-alter" />
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Nama</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="data-alter"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Brand</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="data-brand"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Layar</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="data-layar"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Kamera</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="data-kamera"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Battery</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="data-battery"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Memori</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="data-memori"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Harga</span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="data-harga"
+                      aria-label="Username"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    id="save-alternatif"
+                    class="btn btn-success"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <table
+            class="table mt-3 table-hover table-striped table-bordered text-center"
+            id="data-smartphone"
+          >
+            <thead class="table-dark">
+              <tr>
+                <th class="col-1 text-center">No</th>
+                <th class="col-1 text-center">Nama</th>
+                <th class="col-2 text-center">Brand</th>
+                <th class="col-2 text-center">Layar</th>
+                <th class="col-1 text-center">Kamera</th>
+                <th class="col-1 text-center">Battery</th>
+                <th class="col-1 text-center">Memori</th>
+                <th class="col-1 text-center">Harga</th>
+                <th class="col-1 text-center" sec:authorize="hasRole('ADMIN')">
+                  Action
+                </th>
+              </tr>
+            </thead>
+          </table>
+
+          <!-- /.content-wrapper -->
+          <footer class="main-footer">
+            <strong
+              >Copyright &copy; 2014-2021
+              <a href="https://adminlte.io">AdminLTE.io</a>.</strong
+            >
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+              <b>Version</b> 3.2.0
+            </div>
+          </footer>
+
+          <!-- Control Sidebar -->
+          <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+          </aside>
+          <!-- /.control-sidebar -->
+
+          <!-- ./wrapper -->
+
+          <!-- jQuery -->
+          <script th:src="@{plugins/jquery/jquery.min.js}"></script>
+          <!-- jQuery UI 1.11.4 -->
+          <script th:src="@{plugins/jquery-ui/jquery-ui.min.js}"></script>
+          <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+          <script>
+            $.widget.bridge("uibutton", $.ui.button);
+          </script>
+          <!-- Bootstrap 4 -->
+          <script
+            th:src="@{plugins/bootstrap/js/bootstrap.bundle.min.js}"
+          ></script>
+          <!-- ChartJS -->
+          <script th:src="@{plugins/chart.js/Chart.min.js}"></script>
+          <!-- Sparkline -->
+          <script th:src="@{plugins/sparklines/sparkline.js}"></script>
+          <!-- JQVMap -->
+          <script th:src="@{plugins/jqvmap/jquery.vmap.min.js}"></script>
+          <script th:src="@{plugins/jqvmap/maps/jquery.vmap.usa.js}"></script>
+          <!-- jQuery Knob Chart -->
+          <script th:src="@{plugins/jquery-knob/jquery.knob.min.js}"></script>
+          <!-- daterangepicker -->
+          <script th:src="@{plugins/moment/moment.min.js}"></script>
+          <script
+            th:src="@{plugins/daterangepicker/daterangepicker.js}"
+          ></script>
+          <!-- Tempusdominus Bootstrap 4 -->
+          <script
+            th:src="@{plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js}"
+          ></script>
+          <!-- Summernote -->
+          <script th:src="@{plugins/summernote/summernote-bs4.min.js}"></script>
+          <!-- overlayScrollbars -->
+          <script
+            th:src="@{plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js}"
+          ></script>
+          <!-- AdminLTE App -->
+          <script th:src="@{dist/js/adminlte.js}"></script>
+          <!-- AdminLTE for demo purposes -->
+          <!-- <script src="dist/js/demo.js"></script> -->
+          <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+          <script th:src="@{dist/js/pages/dashboard.js}"></script>
+          <script
+            th:src="@{https://kit.fontawesome.com/905a15b30d.js}"
+            crossorigin="anonymous"
+          ></script>
+
+          <!-- data tables -->
+          <script
+            th:src="@{https://cdn.datatables.net/2.0.3/js/dataTables.js}"
+          ></script>
+
+          <script th:inline="javascript">
+            const rolee = /*[[${role}]]*/ "";
+          </script>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
